@@ -1,1 +1,1 @@
-# Appointment-Reservation-System
+# Python Application for Vaccine Scheduler
