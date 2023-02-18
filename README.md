@@ -1,14 +1,11 @@
 # Python Application for Vaccine Scheduler
-Objectives: To gain experience with database application development, and learn how to use SQL from within Python via pymssql.
-Due dates:
-● Setup: due Friday, November 18th at 11:00pm
-● Part 1: due Wednesday, November 23rd at 11:00pm
-● Part 2: due Wednesday, November 30th at 11:00pm
-Contents:
+## Objectives: To gain experience with database application development, and learn how to use SQL from within Python via pymssql.
+## Contents:
 Introduction
 Setup (deliverables) Homework Requirements Part 1 (deliverables)
 Part 2 (deliverables) Grading
-Introduction
+
+### Introduction
 A common type of application that connects to a database is a reservation system, where users schedule time slots for some centralized resource. In this assignment you will program part of an appointment scheduler for vaccinations, where the users are patients and caregivers keeping track of vaccine stock and appointments.
 This application will run on the command line terminal, and connect to a database server you create with your Microsoft Azure account.
 You will have two main tasks:
@@ -20,7 +17,7 @@ their vaccine appointments. We have implemented the code that caregivers use to
  manage the appointment slots and inventory, which will be a useful reference for you. The implementation is broken up into two milestones, part 1 and part 2, described below.
 Be Careful: This homework requires writing a non-trivial amount of code; our solution is about 600 lines, including the starter code. It will take SIGNIFICANTLY more time than your previous assignments. We will show you the setup process and coding methods in section and lecture. It is critical that you follow along.
 
- Setup
+### Setup
 *Make sure to finish this part of the assignment and upload your setup verification of step 2.4 for the first 5 points!*
 2.1 Clone the starter code
 1. Navigate to the Github repository hosting the starter code: https://github.com/aaditya1004/vaccine-scheduler-python (As you continue to work on the assignment, DO NOT manipulate the internal project structure of the assignment. This will save you some headache when it comes time to submit your code)
@@ -160,8 +157,7 @@ hash = hashlib.pbkdf2_hmac(
    dklen=16
 )
 
- Part 1
-Design
+### Design
 You will first need to work on the design of your database application. Before you begin, please carefully read the assignment specification (including Part 2) and the starter code, and think about what tables would be required to support the required operations. Once you have an idea of how you want to design your database schema:
 ● Draw the ER diagram of your design and place it under src.main.resources (design.pdf).
 ● Write the create table statements for your design, create the tables on Azure, and save
@@ -171,7 +167,8 @@ You will also need to implement the corresponding Python classes of your design.
 ● Vaccine.py: data model for vaccines (implemented for you.)
 ● Patient.py: data model for patients.
 ○ You will implement this class, it can be mostly based on Caregiver.py
-Implementation
+
+### Implementation
 Congratulations! You’re now ready to implement your design! For Part 1, you will need to implement the following functionalities. It is up to you to decide how you want the user to interact with your system. TAs will be interacting with your command-line interface, and we will give credits to all reasonable designs, so don’t worry too much about the details.
 We have implemented account creation for caregivers as an example for you, please read through our implementation before you begin.
 You’re allowed to choose your own messages to display, but please make sure to supply enough information to the user regarding specific situations (e.g., when create failed). Refer to our implementation as an example.
@@ -185,24 +182,7 @@ You will need to implement the following operations: ● create_patient <usernam
 before logging in again. In this case, print “User already logged in.”.
 ○ For all other errors, print "Login failed.". Otherwise, print
 "Logged in as: [username]".
-Deliverables for Part 1
-Due: Wednesday, November 23th at 11:00pm.
-You are free to define any additional files, but Part 1 should require the following at least the following:
-● src.main.resources
-○ design.pdf: the design of your database schema.
-○ create.sql: the create statement for your tables.
-● src.main.scheduler.model
-○ Caregiver.py: the data model for your caregivers.
-○ Patient.py: the data model for your users.
-○ Vaccine.py: the data model for vaccines.
-○ Any other data models you have created.
-● src.main.scheduler
-○ Scheduler.py: the main runner for your command-line interface.
 
- Part 2
-You will implement the rest of your application in Part 2.
-For most of the operations mentioned below, Your program will need to do some checks to ensure that the appointment can be reserved (e.g., whether the vaccine still has available doses). Again, you do not have to cover all of the unexpected situations, but we do require you to have a reasonable amount of checks (especially the easy ones).
-For Part 2, you will need to implement the following operations:
 ● search_caregiver_schedule <date>
 ○ Both patients and caregivers can perform this operation.
 ○ Output the username for the caregivers that are available for the date, along with
@@ -239,20 +219,8 @@ When you’re finished, please turn in the entire repository by compressing the 
 NOTE: Gradescope has a known error where some files will not upload “Server responded with 0 code.”
 If this happens you may either use the github upload option, or upload your code to Google drive and submit a text file with the link to your files on google drive.
 
- Grading
-We will test your solutions by downloading your repo from gradescope and running the application on our machines. Your grade for this homework will be worth 100 points, divided as:
-● Setup (5 points)
-○ Finish setup through step 2.4 and upload your verification to gradescope
-● Part 1 (50 points)
-○ Design (30 points)
-Your database design including the files design.pdf and create.sql
-○ Implementation (20 points)
-Your working implementation of the Part 1 functions: create_patient, login_patient
-● Part 2 (45 points)
-○ Implementation (45 points)
-The remainder of the functions for Patient: search_caregiver_schedule, reserve, show_appointments, logout
-Additionally, you may receive up to 10 points of extra credit for implementing one of the options below
-
+ For most of the operations mentioned below, Your program will need to do some checks to ensure that the appointment can be reserved (e.g., whether the vaccine still has available doses). Again, you do not have to cover all of the unexpected situations, but we do require you to have a reasonable amount of checks (especially the easy ones).
+         
 Optional Extra credit
 You can do either one of the following extra tasks by the final due date for 10 extra credit points.
 1. Add guidelines for strong passwords. In general, it is advisable that all passwords used to access any system should be strong. Add the following check to only allow strong passwords:
