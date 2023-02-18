@@ -1,11 +1,7 @@
 # Python Application for Vaccine Scheduler
-## Objectives: To gain experience with database application development, and learn how to use SQL from within Python via pymssql.
-## Contents:
-Introduction
-Setup (deliverables) Homework Requirements Part 1 (deliverables)
-Part 2 (deliverables) Grading
+*Objectives: To gain experience with database application development, and learn how to use SQL from within Python via pymssql.*
 
-### Introduction
+## Introduction
 A common type of application that connects to a database is a reservation system, where users schedule time slots for some centralized resource. In this assignment you will program part of an appointment scheduler for vaccinations, where the users are patients and caregivers keeping track of vaccine stock and appointments.
 This application will run on the command line terminal, and connect to a database server you create with your Microsoft Azure account.
 You will have two main tasks:
@@ -17,7 +13,7 @@ their vaccine appointments. We have implemented the code that caregivers use to
  manage the appointment slots and inventory, which will be a useful reference for you. The implementation is broken up into two milestones, part 1 and part 2, described below.
 Be Careful: This homework requires writing a non-trivial amount of code; our solution is about 600 lines, including the starter code. It will take SIGNIFICANTLY more time than your previous assignments. We will show you the setup process and coding methods in section and lecture. It is critical that you follow along.
 
-### Setup
+## Setup
 *Make sure to finish this part of the assignment and upload your setup verification of step 2.4 for the first 5 points!*
 2.1 Clone the starter code
 1. Navigate to the Github repository hosting the starter code: https://github.com/aaditya1004/vaccine-scheduler-python (As you continue to work on the assignment, DO NOT manipulate the internal project structure of the assignment. This will save you some headache when it comes time to submit your code)
@@ -157,7 +153,7 @@ hash = hashlib.pbkdf2_hmac(
    dklen=16
 )
 
-### Design
+## Design
 You will first need to work on the design of your database application. Before you begin, please carefully read the assignment specification (including Part 2) and the starter code, and think about what tables would be required to support the required operations. Once you have an idea of how you want to design your database schema:
 ● Draw the ER diagram of your design and place it under src.main.resources (design.pdf).
 ● Write the create table statements for your design, create the tables on Azure, and save
@@ -168,7 +164,7 @@ You will also need to implement the corresponding Python classes of your design.
 ● Patient.py: data model for patients.
 ○ You will implement this class, it can be mostly based on Caregiver.py
 
-### Implementation
+## Implementation
 Congratulations! You’re now ready to implement your design! For Part 1, you will need to implement the following functionalities. It is up to you to decide how you want the user to interact with your system. TAs will be interacting with your command-line interface, and we will give credits to all reasonable designs, so don’t worry too much about the details.
 We have implemented account creation for caregivers as an example for you, please read through our implementation before you begin.
 You’re allowed to choose your own messages to display, but please make sure to supply enough information to the user regarding specific situations (e.g., when create failed). Refer to our implementation as an example.
