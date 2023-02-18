@@ -3,14 +3,13 @@
 
 ## Introduction
 A common type of application that connects to a database is a reservation system, where users schedule time slots for some centralized resource. In this assignment you will program part of an appointment scheduler for vaccinations, where the users are patients and caregivers keeping track of vaccine stock and appointments.
+
 This application will run on the command line terminal, and connect to a database server you create with your Microsoft Azure account.
+
 You will have two main tasks:
-● Complete the design of the database schema with an E/R diagram and create table
-statements
-● Implement the code that stores Patient information, and lets users interactively schedule
-their vaccine appointments. We have implemented the code that caregivers use to
-         
- manage the appointment slots and inventory, which will be a useful reference for you. The implementation is broken up into two milestones, part 1 and part 2, described below.
+* Complete the design of the database schema with an E/R diagram and create table statements
+* Implement the code that stores Patient information, and lets users interactively schedule their vaccine appointments. We have implemented the code that caregivers use to manage the appointment slots and inventory, which will be a useful reference for you. The implementation is broken up into two milestones, part 1 and part 2, described below.
+
 Be Careful: This homework requires writing a non-trivial amount of code; our solution is about 600 lines, including the starter code. It will take SIGNIFICANTLY more time than your previous assignments. We will show you the setup process and coding methods in section and lecture. It is critical that you follow along.
 
 ## Setup
