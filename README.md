@@ -13,34 +13,28 @@ You will have two main tasks:
 Be Careful: This homework requires writing a non-trivial amount of code; our solution is about 600 lines, including the starter code. It will take SIGNIFICANTLY more time than your previous assignments. We will show you the setup process and coding methods in section and lecture. It is critical that you follow along.
 
 ## Setup
-*Make sure to finish this part of the assignment and upload your setup verification of step 2.4 for the first 5 points!*
-2.1 Clone the starter code
-1. Navigate to the Github repository hosting the starter code: https://github.com/aaditya1004/vaccine-scheduler-python (As you continue to work on the assignment, DO NOT manipulate the internal project structure of the assignment. This will save you some headache when it comes time to submit your code)
-2. Click on the green button “Code” and select “Download ZIP” from the drop-down menu.
-   3. Once your download completes, decompress the ZIP file and retrieve the starter code.
-2.2 Read through the starter code
-We created the important folders and files you will be using to build your application: ● src.main.scheduler/
+### Clone the starter code
+* scheduler/Scheduler.py:
+   * This is the main entry point to the command-line interface application.
+   * Once you compile and run Scheduler.py, you should be able to interact
+   with the application.
+* scheduler/db/:
+   * This is a folder holding all of the important components related to your database.
+   * __ConnectionManager.py__: This is a wrapper class for connecting to the database. Read more in 2.3.4.
+* scheduler/model/:
+   * This is a folder holding all the class files for your data model.
+   * You should implement all classes for your data model (e.g., patients, caregivers) in this folder. We have created implementations for Caregiver and Vaccines, and you need to complete the Patient class (which can heavily borrow from Caregiver. Feel free to define more classes or change our implementation if you want!
+* src.main.resources/create.sql: SQL create statements for your tables, we have included the create table code for our implementation. You should copy, paste, and run the code (along with all other create table statements) in your Azure Query Editor.
 
- Scheduler.py:
-■ This is the main entry point to the command-line interface application.
-Once you compile and run Scheduler.py, you should be able to interact
-with the application. db/:
-■ This is a folder holding all of the important components related to your database.
-■ ConnectionManager.py: This is a wrapper class for connecting to the database. Read more in 2.3.4.
-model/:
-■ This is a folder holding all the class files for your data model.
-■ You should implement all classes for your data model (e.g., patients,
-caregivers) in this folder. We have created implementations for Caregiver and Vaccines, and you need to complete the Patient class (which can heavily borrow from Caregiver. Feel free to define more classes or change our implementation if you want!
-● src.main.resources/
-○ create.sql: SQL create statements for your tables, we have included the create
-table code for our implementation. You should copy, paste, and run the code (along with all other create table statements) in your Azure Query Editor.
-2.3 Configure your database connection 2.3.1 Installing dependencies and anaconda
+### Configure your database connection 2.3.1 Installing dependencies and anaconda
 Our application relies on a few dependencies and external packages. You’ll need to install those dependencies to complete this assignment.
+
 We will be using Python SQL Driver pymssql to allow our Python application to connect to an Azure database. We recommend using Anaconda for completing this assignment.
-Mac users, follow the instructions in the link to install Anaconda on macOS:
-https://docs.anaconda.com/anaconda/install/mac-os/
+
+Mac users, follow the instructions in the link to install Anaconda on macOS: https://docs.anaconda.com/anaconda/install/mac-os/
   
- Windows users, follow the instructions in the link to install Anaconda on Windows: https://docs.anaconda.com/anaconda/install/windows/. You can choose to install Pycharm for Anaconda, but we recommend installing Anaconda without PyCharm as we will be using the terminal.
+Windows users, follow the instructions in the link to install Anaconda on Windows: https://docs.anaconda.com/anaconda/install/windows/. You can choose to install Pycharm for Anaconda, but we recommend installing Anaconda without PyCharm as we will be using the terminal.
+
 After installing Anaconda:
 1. We first need to create a development environment in conda.
 a. macOS users: launch terminal and navigate to your source directory.
@@ -53,26 +47,36 @@ a. Run: conda create -n [environment name]
 a. Run: conda activate [environment name]
 b. To deactivate, Run: conda deactivate
 4. Run “conda install pymssql” to install the dependencies.
-2.3.3 Setting up credentials
+
+
+### Setting up credentials
 The first step is to retrieve the information to connect to your Microsoft Azure Database.
-● The Server and DB names can be found in the Azure portal.
-● The server name would be “data514server.database.windows.net” and the
-database name would be “data514db” for the database shown in the screenshot
+* The Server and DB names can be found in the Azure portal.
+* The server name would be “data514server.database.windows.net” and the database name would be “data514db” for the database shown in the screenshot
 below.
-YOU NEED TO CHANGE THIS ACCORDING TO YOUR DATABASE!
-● The User ID would be of the format <user id>@<server name>
+
+__YOU NEED TO CHANGE THIS ACCORDING TO YOUR DATABASE!__
+* The User ID would be of the format <user id>@<server name>
 For example, it could be exampleUser@data514server where “exampleUser” is the login ID which you used to log in to query editor on Azure and “data514server” is the server name.
-● Password is what you used to log in to your query editor on the Azure portal.
-    
- If you’re having trouble finding that information, please make a discussion post, or contact us through email!
-Once you’ve retrieved the credentials needed, you can set up your environment variables. 2.3.3 Setting up environment variables
+* Password is what you used to log in to your query editor on the Azure portal.
+
+Once you’ve retrieved the credentials needed, you can set up your environment variables.
+
+### Setting up environment variables
 Make sure to set this in the correct environment if you’re using virtual environments!
 In your terminal or Anaconda Prompt, type the following:
+```
+conda env config vars set Server={}
+conda env config vars set DBName={} 
+conda env config vars set UserID={} 
+conda env config vars set Password={}
+```
 Where “{}” is replaced by the respective information you retrieved from step 1.
 You will need to reactivate your environment after that with the command “conda activate [environment name]”
-2.3.4 Working with the connection manager
+
+### Working with the connection manager
 In scheduler.db.ConnectionManager.py, we have defined a wrapper class to help you instantiate the connection to your SQL Server database. We recommend reading about pymssql Connection and Cursor classes for retrieving and updating information in your database. Here’s an example of using ConnectionManager.
-  conda env config vars set Server={} conda env config vars set DBName={} conda env config vars set UserID={} conda env config vars set Password={}
+```
  # instantiating a connection manager class and cursor
 cm = ConnectionManager()
 conn = cm.create_connection()
@@ -94,26 +98,33 @@ try:
         print(name:" + str(row[‘Name’]) + ", available_doses: " + str(row[‘Doses’]))
 except pymssql.Error:
     print(“Error occurred when getting pfizer from Vaccines”)
+```
 Helpful resources on writing pymssql:
-Documentation -> https://pythonhosted.org/pymssql/ref/pymssql.html Examples -> https://pythonhosted.org/pymssql/pymssql_examples.html
-2.4 Verify your setup
+   
+Documentation -> https://pythonhosted.org/pymssql/ref/pymssql.html
+   
+Examples -> https://pythonhosted.org/pymssql/pymssql_examples.html
+
+### Verify your setup
 Once you’re done with everything, try to run the program and you should see the following output. You should be running the program in terminal (macOS) or Anaconda Prompt (Windows) and in your conda environment.
 Note: Command to run the program: “python Scheduler.py” or “python3 Scheduler.py”.
-   Welcome to the COVID-19 Vaccine Reservation Scheduling Application!
+```
+Welcome to the COVID-19 Vaccine Reservation Scheduling Application!
 *** Please enter one of the following commands ***
 > create_patient <username> <password>
 > create_caregiver <username> <password>
 > login_patient <username> <password>
 > login_caregiver <username> <password>
 > search_caregiver_schedule <date>
-
-  > reserve <date> <vaccine>
+> reserve <date> <vaccine>
 > upload_availability <date>
 > cancel <appointment_id>
 > add_doses <vaccine> <number>
 > show_appointments
 > logout
 > quit
+```
+
 If you can see the list of options above, congratulations! You have verified your local setup.
 Next, to verify that you have setup your database connection correctly, try to create a caregiver with the command “create_caregiver <username> <password>”. Make sure you have created the tables on Azure before testing this command.
 To verify you have done the setup, take a screenshot or phone picture of this screen on your computer, along with your created caregiver on Azure (a simple SELECT showing that you have created a caregiver would work), and upload to gradescope for 5 points.
