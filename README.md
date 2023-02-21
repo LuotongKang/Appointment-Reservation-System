@@ -1,35 +1,32 @@
 # Python Application for Vaccine Scheduler
-*Objectives: To gain experience with database application development, and learn how to use SQL from within Python via pymssql.*
+*Objectives: database application development; use SQL from within Python via pymssql.*
+This is a vaccine scheduling application (with a database hosted on Microsoft Azure) that can be deployed by hospitals or clinics and supports interaction with users through the terminal/command-line interface. In the real world it is unlikely that users would be using the command line terminal instead of a GUI, but all of the application logic would remain the same. For simplicity of programming, we use the command line terminal as our user interface
 
 ## Introduction
 A common type of application that connects to a database is a reservation system, where users schedule time slots for some centralized resource. In this assignment you will program part of an appointment scheduler for vaccinations, where the users are patients and caregivers keeping track of vaccine stock and appointments.
 
 This application will run on the command line terminal, and connect to a database server you create with your Microsoft Azure account.
 
-You will have two main tasks:
-* Complete the design of the database schema with an E/R diagram and create table statements
-* Implement the code that stores Patient information, and lets users interactively schedule their vaccine appointments. We have implemented the code that caregivers use to manage the appointment slots and inventory, which will be a useful reference for you. The implementation is broken up into two milestones, part 1 and part 2, described below.
-
-Be Careful: This homework requires writing a non-trivial amount of code; our solution is about 600 lines, including the starter code. It will take SIGNIFICANTLY more time than your previous assignments. We will show you the setup process and coding methods in section and lecture. It is critical that you follow along.
+Using the E/R diagram and create table statements in `resources` folder, you will be able to interact with the database using this application. Caregiver and Patient can schedule their vaccine appointments and manage the inventory based on their roles.
 
 ## Setup
 ### Clone the starter code
 * scheduler/Scheduler.py:
    * This is the main entry point to the command-line interface application.
-   * Once you compile and run Scheduler.py, you should be able to interact
-   with the application.
+   * Once you compile and run Scheduler.py, you should be able to interact with the application.
 * scheduler/db/:
    * This is a folder holding all of the important components related to your database.
    * __ConnectionManager.py__: This is a wrapper class for connecting to the database. Read more in 2.3.4.
 * scheduler/model/:
    * This is a folder holding all the class files for your data model.
-   * You should implement all classes for your data model (e.g., patients, caregivers) in this folder. We have created implementations for Caregiver and Vaccines, and you need to complete the Patient class (which can heavily borrow from Caregiver. Feel free to define more classes or change our implementation if you want!
-* src.main.resources/create.sql: SQL create statements for your tables, we have included the create table code for our implementation. You should copy, paste, and run the code (along with all other create table statements) in your Azure Query Editor.
+   * You should implement all classes for your data model (e.g., patients, caregivers) in this folder.
+* resources/create.sql: SQL create statements for your tables. You should copy, paste, and run the code (along with all other create table statements) in your Azure Query Editor.
 
-### Configure your database connection 2.3.1 Installing dependencies and anaconda
+### Configure your database connection
+#### Installing dependencies and anaconda
 Our application relies on a few dependencies and external packages. You’ll need to install those dependencies to complete this assignment.
 
-We will be using Python SQL Driver pymssql to allow our Python application to connect to an Azure database. We recommend using Anaconda for completing this assignment.
+We will be using Python SQL Driver `pymssql` to allow our Python application to connect to an Azure database. We recommend using Anaconda.
 
 Mac users, follow the instructions in the link to install Anaconda on macOS: https://docs.anaconda.com/anaconda/install/mac-os/
   
@@ -37,33 +34,27 @@ Windows users, follow the instructions in the link to install Anaconda on Window
 
 After installing Anaconda:
 1. We first need to create a development environment in conda.
-a. macOS users: launch terminal and navigate to your source directory.
-b. Windows users: launch “Anaconda Prompt” and navigate to your source
-directory.
-2. Follow the steps here to create an environment. Make sure you remember the name of
-your environment.
-a. Run: conda create -n [environment name]
-3. Activate your environment following the steps here.
-a. Run: conda activate [environment name]
-b. To deactivate, Run: conda deactivate
-4. Run “conda install pymssql” to install the dependencies.
+  * macOS users: launch terminal and navigate to your source directory.
+  * Windows users: launch “Anaconda Prompt” and navigate to your source directory.
+2. Run `conda create -n [environment name]` to create an environment. Make sure you remember the name of your environment.
+3. Activate your environment by running `conda activate [environment name]`. To deactivate, run: `conda deactivate`
+4. Run `conda install pymssql` to install the dependencies.
 
-
-### Setting up credentials
+#### Setting up credentials
 The first step is to retrieve the information to connect to your Microsoft Azure Database.
 * The Server and DB names can be found in the Azure portal.
-* The server name would be “data514server.database.windows.net” and the database name would be “data514db” for the database shown in the screenshot
-below.
+* The server name would be “data514server.database.windows.net” and the database name would be “data514db”.
 
 __YOU NEED TO CHANGE THIS ACCORDING TO YOUR DATABASE!__
-* The User ID would be of the format <user id>@<server name>
+* The User ID would be of the format _<user id>@<server name>_
 For example, it could be exampleUser@data514server where “exampleUser” is the login ID which you used to log in to query editor on Azure and “data514server” is the server name.
 * Password is what you used to log in to your query editor on the Azure portal.
 
 Once you’ve retrieved the credentials needed, you can set up your environment variables.
 
-### Setting up environment variables
+#### Setting up environment variables
 Make sure to set this in the correct environment if you’re using virtual environments!
+
 In your terminal or Anaconda Prompt, type the following:
 ```
 conda env config vars set Server={}
@@ -72,41 +63,12 @@ conda env config vars set UserID={}
 conda env config vars set Password={}
 ```
 Where “{}” is replaced by the respective information you retrieved from step 1.
+  
 You will need to reactivate your environment after that with the command “conda activate [environment name]”
-
-### Working with the connection manager
-In scheduler.db.ConnectionManager.py, we have defined a wrapper class to help you instantiate the connection to your SQL Server database. We recommend reading about pymssql Connection and Cursor classes for retrieving and updating information in your database. Here’s an example of using ConnectionManager.
-```
- # instantiating a connection manager class and cursor
-cm = ConnectionManager()
-conn = cm.create_connection()
-cursor = conn.cursor()
-# example 1: getting all names and available doses in the vaccine table
-
-  get_all_vaccines = "SELECT Name, Doses FROM vaccines"
-try:
-    cursor.execute(get_all_vaccines)
-    for row in cursor:
-        print(name:" + str(row[‘Name’]) + ", available_doses: " + str(row[‘Doses’]))
-except pymssql.Error:
-    print(“Error occurred when getting details from Vaccines”)
-# example 2: getting all records where the name matches “Pfizer”
-get_pfizer = "SELECT * FROM vaccine WHERE name = %s"
-try:
-    cursor.execute(get_pfizer)
-    for row in cursor:
-        print(name:" + str(row[‘Name’]) + ", available_doses: " + str(row[‘Doses’]))
-except pymssql.Error:
-    print(“Error occurred when getting pfizer from Vaccines”)
-```
-Helpful resources on writing pymssql:
-   
-Documentation -> https://pythonhosted.org/pymssql/ref/pymssql.html
-   
-Examples -> https://pythonhosted.org/pymssql/pymssql_examples.html
 
 ### Verify your setup
 Once you’re done with everything, try to run the program and you should see the following output. You should be running the program in terminal (macOS) or Anaconda Prompt (Windows) and in your conda environment.
+
 Note: Command to run the program: “python Scheduler.py” or “python3 Scheduler.py”.
 ```
 Welcome to the COVID-19 Vaccine Reservation Scheduling Application!
@@ -126,31 +88,61 @@ Welcome to the COVID-19 Vaccine Reservation Scheduling Application!
 ```
 
 If you can see the list of options above, congratulations! You have verified your local setup.
-Next, to verify that you have setup your database connection correctly, try to create a caregiver with the command “create_caregiver <username> <password>”. Make sure you have created the tables on Azure before testing this command.
-To verify you have done the setup, take a screenshot or phone picture of this screen on your computer, along with your created caregiver on Azure (a simple SELECT showing that you have created a caregiver would work), and upload to gradescope for 5 points.
-It is your job in the rest of the assignment to finish implementing the entire system.
-Deliverables for Setup
-Due: Friday, November 18th at 11:00pm.
-Upload to gradescope a screenshot or phone picture of the welcome prompt on your computer and the successful “create_caregiver <username> <password>” command, along with your created caregiver on Azure.
 
- Requirements
-Your assignment is to build a vaccine scheduling application (with a database hosted on Microsoft Azure) that can be deployed by hospitals or clinics and supports interaction with users through the terminal/command-line interface. In the real world it is unlikely that users would be using the command line terminal instead of a GUI, but all of the application logic would remain the same. For simplicity of programming, we use the command line terminal as our user interface for this assignment.
-We need the following entity sets in our database schema design (hint: you should probably be defining your class files based on this!):
-● Patients: these are customers that want to receive the vaccine.
-● Caregivers: these are employees of the health organization administering the vaccines.
-● Vaccines: these are vaccine doses in the health organization’s inventory of medical
-supplies that are on hand and ready to be given to the patients. In this assignment, you will need to:
-● Complete the design of the database schema, with an E/R diagram and table statements (Part 1);
-● Implement the missing functionality from the application (Part 1 & Part 2)
-A few things to note:
-● You should handle invalid inputs gracefully. For example, if the user types a command
-that doesn’t exist, it is bad to immediately terminate the program. A better design would be to give the user some feedback and allow them to re-type the command. Points will be taken off if the program terminates immediately after receiving invalid input. While you don’t have to consider all possible inputs, error handling for common errors (e.g., missing information, wrong spelling) should be considered.
-● After executing a command, you should re-route the program to display the list of commands again. For example:
+Next, to verify that you have setup your database connection correctly, try to create a caregiver with the command `create_caregiver <username> <password>`. Make sure you have created the tables on Azure before testing this command.
 
- ○ If a patient ‘reserves’ their vaccine for a date, you should update your database to reflect this information and route the patient back to the menu again.
-1.3 How to handle passwords
-You should never directly store any password in the database. Instead, we'll be using a technique called salting and hashing. In cryptography, salting hashes refer to adding random data to the input of a hash function to guarantee a unique output. We will store the salted password hash and the salt itself to avoid storing passwords in plain text. Use the following code snippet as a template for computing the hash given a password string:
- import hashlib
+## Codes clarification
+### Connection manager
+In scheduler.db.ConnectionManager.py, a wrapper class is defined to instantiate the connection to your SQL Server database. Here’s an example of using ConnectionManager.
+  
+The application is built with a basic use of this connection between database and users' commands.
+```
+ # instantiating a connection manager class and cursor
+cm = ConnectionManager()
+conn = cm.create_connection()
+cursor = conn.cursor()
+```
+
+Here are some examples:
+```
+# example 1: getting all names and available doses in the vaccine table
+
+  get_all_vaccines = "SELECT Name, Doses FROM vaccines"
+try:
+    cursor.execute(get_all_vaccines)
+    for row in cursor:
+        print(name:" + str(row[‘Name’]) + ", available_doses: " + str(row[‘Doses’]))
+except pymssql.Error:
+    print(“Error occurred when getting details from Vaccines”)
+
+# example 2: getting all records where the name matches “Pfizer”
+get_pfizer = "SELECT * FROM vaccine WHERE name = %s"
+try:
+    cursor.execute(get_pfizer)
+    for row in cursor:
+        print(name:" + str(row[‘Name’]) + ", available_doses: " + str(row[‘Doses’]))
+except pymssql.Error:
+    print(“Error occurred when getting pfizer from Vaccines”)
+```
+Helpful resources on writing pymssql:
+   
+Documentation -> https://pythonhosted.org/pymssql/ref/pymssql.html
+   
+Examples -> https://pythonhosted.org/pymssql/pymssql_examples.html
+
+### Entity sets
+* Patients: these are customers that want to receive the vaccine.
+* Caregivers: these are employees of the health organization administering the vaccines.
+* Vaccines: these are vaccine doses in the health organization’s inventory of medical supplies that are on hand and ready to be given to the patients. 
+
+### Error handling
+* If the user types a command that doesn’t exist, it is bad to immediately terminate the program. A better design would be to give the user some feedback and allow them to re-type the command. While not all possible inputs are considered, error handling for common errors (e.g., missing information, wrong spelling) is included.
+* After executing a command, it should re-route the program to display the list of commands again. For example: If a patient 'reserves' their vaccine for a date, the database wil be updated to reflect this information and the patient will be routed back to the menu again.
+
+### Passwords
+Instead of directly storing all password in the database, we've used a technique called salting and hashing. In cryptography, salting hashes refer to adding random data to the input of a hash function to guarantee a unique output. We will store the salted password hash and the salt itself to avoid storing passwords in plain text. Use the following code snippet as a template for computing the hash given a password string:
+```
+import hashlib
 import os
 # Generate a random cryptographic salt
 salt = os.urandom(16)
@@ -162,77 +154,48 @@ hash = hashlib.pbkdf2_hmac(
    100000,
    dklen=16
 )
+```
 
-## Design
-You will first need to work on the design of your database application. Before you begin, please carefully read the assignment specification (including Part 2) and the starter code, and think about what tables would be required to support the required operations. Once you have an idea of how you want to design your database schema:
-● Draw the ER diagram of your design and place it under src.main.resources (design.pdf).
-● Write the create table statements for your design, create the tables on Azure, and save
-the code under src.main.resources (create.sql).
-You will also need to implement the corresponding Python classes of your design. We have implemented Caregiver.py for you, but feel free to change any of the details. You will need the following classes, and you may implement more data models if you feel the necessity:
-● Caregiver.py: data model for caregivers (implemented for you.)
-● Vaccine.py: data model for vaccines (implemented for you.)
-● Patient.py: data model for patients.
-○ You will implement this class, it can be mostly based on Caregiver.py
+## Functionalities
+The following operations were implemented:
+* `create_patient <username> <password>` & `create_caregiver <username> <password>`
+  * Print `Created user {username}` if create was successful.
+  * If the user name is already taken, print `Username taken, try again!`.
+  * For all other errors, print `Failed to create user.`.
+* `login_patient <username> <password>` & `login_caregiver <username> <password>`
+  * If a user is already logged in in the current session, print `User already logged in.`.
+  * For all other errors, print `Login failed.`. Otherwise, print `Logged in as: [username]`.
+* `search_caregiver_schedule <date>`
+  * Both patients and caregivers can perform this operation.
+  * Output the username for the caregivers that are available for the date, along with the number of available doses left for each vaccine. Order by the username of the caregiver. Separate each attribute with a space.
+  * If no user is logged in, print `Please login first!`.
+  * For all other errors, print `Please try again!`.
+* `reserve <date> <vaccine>`
+  * Patients perform this operation to reserve an appointment.
+  * Caregivers can only see a maximum of one patient per day, meaning that if the reservation went through, the caregiver is no longer available for that date.
+  * If there are available caregivers, choose the caregiver by alphabetical order and print `Appointment ID: {appointment_id}, Caregiver username: {username}`.
+  * Output the assigned caregiver and the appointment ID for the reservation.
+  * If there’s no available caregiver, print `No Caregiver is available!`. If not enough vaccine doses are available, print `Not enough available doses!`.
+  * If no user is logged in, print `Please login first!`. If the current user logged in is not a patient, print `Please login as a patient!`.
+  * For all other errors, print `Please try again!`.
+* `add_doses <vaccine> <number>`
+  * Vaccines inventory increase, which will be reflected in the database.
+* `show_appointments`
+  * Output the scheduled appointments for the current user (both patients and caregivers).
+  * For caregivers, it should print the appointment ID, vaccine name, date, and patient name. Order by the appointment ID. Separate each attribute with a space.
+  * For patients, it should print the appointment ID, vaccine name, date, and caregiver name. Order by the appointment ID. Separate each attribute with a space.
+  * If no user is logged in, print `Please login first!`.
+  * For all other errors, print `Please try again!`. 
+* `Logout`
+  * If not logged in, it should print `Please login first.`. Otherwise, print `Successfully logged out!`.
+  * For all other errors, print `Please try again!`.
 
-## Implementation
-Congratulations! You’re now ready to implement your design! For Part 1, you will need to implement the following functionalities. It is up to you to decide how you want the user to interact with your system. TAs will be interacting with your command-line interface, and we will give credits to all reasonable designs, so don’t worry too much about the details.
-We have implemented account creation for caregivers as an example for you, please read through our implementation before you begin.
-You’re allowed to choose your own messages to display, but please make sure to supply enough information to the user regarding specific situations (e.g., when create failed). Refer to our implementation as an example.
-You will need to implement the following operations: ● create_patient <username> <password>
-
- ○ Print "Created user {username}" if create was successful.
-○ If the user name is already taken, print “Username taken, try again!”.
-○ For all other errors, print “Failed to create user.”.
-● login_patient <username> <password>
-○ If a user is already logged in in the current session, you need to logout first
-before logging in again. In this case, print “User already logged in.”.
-○ For all other errors, print "Login failed.". Otherwise, print
-"Logged in as: [username]".
-
-● search_caregiver_schedule <date>
-○ Both patients and caregivers can perform this operation.
-○ Output the username for the caregivers that are available for the date, along with
-the number of available doses left for each vaccine. Order by the username of
-the caregiver. Separate each attribute with a space.
-○ If no user is logged in, print “Please login first!”.
-○ For all other errors, print "Please try again!".
-● reserve <date> <vaccine>
-○ Patients perform this operation to reserve an appointment.
-○ Caregivers can only see a maximum of one patient per day, meaning that if the
-reservation went through, the caregiver is no longer available for that date.
-○ If there are available caregivers, choose the caregiver by alphabetical order and
-print “Appointment ID: {appointment_id}, Caregiver username: {username}”.
-○ Output the assigned caregiver and the appointment ID for the reservation.
-○ If there’s no available caregiver, print “No Caregiver is available!”. If not enough
-vaccine doses are available, print "Not enough available doses!".
-○ If no user is logged in, print “Please login first!”. If the current user logged in is not
-a patient, print “Please login as a patient!”.
-○ For all other errors, print "Please try again!".
-● show_appointments
-○ Output the scheduled appointments for the current user (both patients and
-caregivers).
-○ For caregivers, you should print the appointment ID, vaccine name, date, and
-patient name. Order by the appointment ID. Separate each attribute with a space.
-
- ○ For patients, you should print the appointment ID, vaccine name, date, and caregiver name. Order by the appointment ID. Separate each attribute with a space.
-○ If no user is logged in, print “Please login first!”.
-○ For all other errors, print "Please try again!". ● Logout
-○ If not logged in, you should print “Please login first.”. Otherwise, print “Successfully logged out!”.
-○ For all other errors, print "Please try again!".
-Deliverables for Part 2
-Due: Wednesday, November 30th at 11:00pm.
-When you’re finished, please turn in the entire repository by compressing the project folder into a zip file, then uploading it on Gradescope.
-NOTE: Gradescope has a known error where some files will not upload “Server responded with 0 code.”
-If this happens you may either use the github upload option, or upload your code to Google drive and submit a text file with the link to your files on google drive.
-
- For most of the operations mentioned below, Your program will need to do some checks to ensure that the appointment can be reserved (e.g., whether the vaccine still has available doses). Again, you do not have to cover all of the unexpected situations, but we do require you to have a reasonable amount of checks (especially the easy ones).
+For most of the operations mentioned below, The program will do some checks to ensure that the appointment can be reserved (e.g., whether the vaccine still has available doses).
          
-Optional Extra credit
-You can do either one of the following extra tasks by the final due date for 10 extra credit points.
-1. Add guidelines for strong passwords. In general, it is advisable that all passwords used to access any system should be strong. Add the following check to only allow strong passwords:
-a. At least 8 characters.
-b. A mixture of both uppercase and lowercase letters.
-c. A mixture of letters and numbers.
-d. Inclusion of at least one special character, from “!”, “@”, “#”, “?”.
-2. Both caregivers and patients should be able to cancel an existing appointment. Implement the cancel operation for both caregivers and patients. Hint: both the patient’s schedule and the caregiver’s schedule should reflect the change when an appointment is canceled.
- > cancel <appointment_id>
+## Extra funcionalities
+1. Only strong passwords are allowed:
+  * At least 8 characters.
+  * A mixture of both uppercase and lowercase letters.
+  * A mixture of letters and numbers.
+  * Inclusion of at least one special character, from “!”, “@”, “#”, “?”.
+2. Both caregivers and patients can cancel an existing appointment.
