@@ -1,5 +1,6 @@
 # Python Application for Vaccine Scheduler
 *Objectives: database application development; use SQL from within Python via pymssql.*
+
 This is a vaccine scheduling application (with a database hosted on Microsoft Azure) that can be deployed by hospitals or clinics and supports interaction with users through the terminal/command-line interface. In the real world it is unlikely that users would be using the command line terminal instead of a GUI, but all of the application logic would remain the same. For simplicity of programming, we use the command line terminal as our user interface
 
 ## Introduction
